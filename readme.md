@@ -67,7 +67,7 @@ app.service('stateService', function($http) {
 ```
 <input type="text" ng-model="selectedAbbreviation" placeholder="{{prompt}}" ng-keydown="selected=false"/><br/>
 <div ng-hide="!selectedAbbreviation.length || selected">
-	<div ng-repeat="state in states | filter:model  track by $index" ng-click="handleSelection(state[abbreviation])" style="cursor:pointer" >
+	<div ng-repeat="state in states | filter:selectedAbbreviation  track by $index" ng-click="handleSelection(state[abbreviation])" style="cursor:pointer" >
 		<p>{{state[name]}}</p>
 	</div>
 </div>
@@ -108,8 +108,8 @@ app.directive('typeahead', function($timeout) {
     selectedAbbreviation: '@',
   },
 	link:function(scope,elem,attrs){
-	     scope.handleSelection=function(selectedItem){
-		  scope.model=selectedItem;
+	     scope.handleSelection=function(selectedState){
+		  scope.selectedAbbreviation=selectedState;
 	  }
 	  scope.selected=true;
 	},
