@@ -51,7 +51,7 @@ app.service('stateService', function($http) {
 </head>
 <body>
    <div  ng-controller="StatesController">
-	<statetypeahead items="states" prompt="Start typing a US state" name="name" abbreviation="abbreviation" model="model" on-select="onStateSelected()" />
+	<statetypeahead states="states" prompt="Start typing a US state" name="name" abbreviation="abbreviation" model="model"  />
    </div>
 </body>
 </html>
@@ -65,15 +65,14 @@ app.service('stateService', function($http) {
 - we need an ng click that will fill in our search bar with the abbreviation for the state.
 
 ```
-<input type="text" ng-model="model" placeholder="{{prompt}}" ng-keydown="selected=false"/><br/>
-<div ng-hide="!model.length || selected">
+<input type="text" ng-model="selectedAbbreviation" placeholder="{{prompt}}" ng-keydown="selected=false"/><br/>
+<div ng-hide="!selectedAbbreviation.length || selected">
 	<div ng-repeat="state in states | filter:model  track by $index" ng-click="handleSelection(state[abbreviation])" style="cursor:pointer" >
 		<p>{{state[name]}}</p>
 	</div>
 </div>
 ```
 - hide it if there is no model or we aren't selecting anything.
-
 - loop through our items displaying the name.
 
 #### Controller:
@@ -96,9 +95,7 @@ app.controller('StatesController',function($scope, stateFactory){
 - within this we need to
     - Handle Selection.
     - Set the correct model.
-    - Set selected to true.(so that we hide the dropwdown list)
-
-
+    - Set selected to true.(so that we hide the dropdown list)
 ```
 app.directive('typeahead', function($timeout) {
   return {
@@ -108,8 +105,8 @@ app.directive('typeahead', function($timeout) {
 		prompt:'@',
 		name: '@',
 		abbreviation:'@',
-		model: '='
-    	},
+    selectedAbbreviation: '@',
+  },
 	link:function(scope,elem,attrs){
 	     scope.handleSelection=function(selectedItem){
 		  scope.model=selectedItem;
@@ -120,3 +117,6 @@ app.directive('typeahead', function($timeout) {
   }
 });
 ```
+### Scope
+- why do we use the @ symbol here instead of a = or &?
+- what would we use the other two for?
