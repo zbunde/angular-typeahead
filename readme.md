@@ -51,7 +51,7 @@ app.service('stateService', function($http) {
 </head>
 <body>
    <div  ng-controller="StatesController">
-	<statetypeahead states="states" prompt="Start typing a US state" name="name" abbreviation="abbreviation" model="model"  />
+	<statetypeahead states="states" prompt="Start typing a US state" name="name" abbreviation="abbreviation"   />
    </div>
 </body>
 </html>
