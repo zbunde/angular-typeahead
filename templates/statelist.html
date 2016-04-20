@@ -1,6 +1,12 @@
-<input type="text" ng-model="model" placeholder="{{prompt}}" ng-keydown="selected=false"/><br/>
-<div ng-hide="!model.length || selected">
-	<div ng-repeat="item in items | filter:model  track by $index" ng-click="handleSelection(item[abbreviation])" style="cursor:pointer" >
-		<p>{{item[name]}}</p>
+
+<!-- setup input box -->
+
+<input type="text" ng-model="selectedAbbreviation" placeholder="{{prompt}}" ng-keydown="selected=false"/><br/>
+
+<!-- hide the list if no state shows up in filter or we have selected a state -->
+<div ng-hide="!selectedAbbreviation.length || selected">
+	<!-- loop through states, filter by model add an ng-click for each one that will handle the selection if it is chosen. -->
+	<div ng-repeat="state in states | filter:selectedAbbreviation  track by $index" ng-click="handleSelection(state[abbreviation])" style="cursor:pointer" >
+		<p>{{state[name]}}</p>
 	</div>
 </div>

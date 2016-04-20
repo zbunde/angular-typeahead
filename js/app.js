@@ -4,16 +4,19 @@ app.directive('statetypeahead', function($timeout) {
   return {
     restrict: 'AEC',
     scope: {
-		items: '=',
+		states: '=',
 		prompt:'@',
 		name: '@',
 		abbreviation:'@',
 		state: '=',
+    selectedAbbreviation: '@',
 	},
 
 	link:function(scope,elem,attrs){
-	   scope.handleSelection=function(selectedItem){
-		 scope.model=selectedItem;
+	   scope.handleSelection=function(selectedState){
+      /// sets our current model to the selected states abreviation
+		 scope.selectedAbbreviation=selectedState;
+     /// sets selected to true so that the list becomes hidden.
 		 scope.selected=true;
 	  }
 	},
@@ -21,14 +24,15 @@ app.directive('statetypeahead', function($timeout) {
   }
 });
 
-app.controller('StatesController',function($scope, stateFactory){
-	stateFactory.get('states.json').then(function(data){
-		$scope.items=data;
+app.controller('StatesController',function($scope, stateService){
+	stateService.get('states.json').then(function(data){
+    /// sets our scope.states to the return data
+		$scope.states=data;
 	});
 	$scope.name="";
 });
 
-app.factory('stateFactory', function($http) {
+app.service('stateService', function($http) {
   return {
     get: function(url) {
       return $http.get(url).then(function(resp) {
@@ -36,4 +40,6 @@ app.factory('stateFactory', function($http) {
       });
     }
   };
+
+
 });
