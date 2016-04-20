@@ -11,6 +11,8 @@
 ```
 - Since we are making a http request to a local file we need to run a server.
 - Use python -m SimpleHTTPServer 8000 within this directory to start a server that will serve our files.
+- When a user begins typing we want to filter all of the states by what they type. When they select a state we want to set the value in the text input to the selected state's abbreviation.
+
 
 ### Setup
 ```
@@ -21,10 +23,10 @@ templates
 index.html
 states.json
 ```
-#### Factory:
+#### Service:
 
 ```
-app.factory('stateFactory', function($http) {
+app.service('stateService', function($http) {
   return {
     get: function(url) {
       return $http.get(url).then(function(resp) {
@@ -44,12 +46,12 @@ app.factory('stateFactory', function($http) {
 ```
 <html ng-app="app">
 <head>
-<script src="http://code.angularjs.org/1.2.9/angular.min.js" type="text/javascript"></script>
+<script src="http://code.angularjs.org/1.4.10/angular.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="js/app.js"></script>
 </head>
 <body>
    <div  ng-controller="StatesController">
-	<statetypeahead items="items" prompt="Start typing a US state" name="name" abbreviation="abbreviation" model="model" on-select="onItemSelected()" />
+	<statetypeahead items="states" prompt="Start typing a US state" name="name" abbreviation="abbreviation" model="model" on-select="onStateSelected()" />
    </div>
 </body>
 </html>
@@ -65,25 +67,24 @@ app.factory('stateFactory', function($http) {
 ```
 <input type="text" ng-model="model" placeholder="{{prompt}}" ng-keydown="selected=false"/><br/>
 <div ng-hide="!model.length || selected">
-	<div ng-repeat="item in items | filter:model  track by $index" ng-click="handleSelection(item[abbreviation])" style="cursor:pointer" >
-		<p>{{item[name]}}</p>
+	<div ng-repeat="state in states | filter:model  track by $index" ng-click="handleSelection(state[abbreviation])" style="cursor:pointer" >
+		<p>{{state[name]}}</p>
 	</div>
 </div>
-
-
 ```
-- hide it if there is no model or we aren't selecting something.
-- loop through our items displaying both the name and abbreviation.
+- hide it if there is no model or we aren't selecting anything.
+
+- loop through our items displaying the name.
 
 #### Controller:
 - within our controller we make a get request to our states.json file, and then set our scope.items to that return.
 - use our factory we built to retrieve the states from our json file.
-- set our $scope.items to the return of that request.
+- set our $scope.states to the return of that request.
 
 ```
 app.controller('StatesController',function($scope, stateFactory){
 	stateFactory.get('states.json').then(function(data){
-		$scope.items=data;
+		$scope.states=data;
 	});
 	$scope.name="";
 });
@@ -111,7 +112,7 @@ app.directive('typeahead', function($timeout) {
     	},
 	link:function(scope,elem,attrs){
 	     scope.handleSelection=function(selectedItem){
-		 scope.model=selectedItem;
+		  scope.model=selectedItem;
 	  }
 	  scope.selected=true;
 	},
