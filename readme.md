@@ -61,7 +61,7 @@ app.service('stateService', function($http) {
 - the name and abbreviation fields will relate to the returned states and display them.
 - this is also the dropdown menu that will contain all of our states and allow the user to select the correct one.
 - we need to handle selecting a state by firing a function to fill in the box.
-- we will then filter item in items by the model, as we type our results will shrink.
+- we will then filter state in states by what is being typed, as we type our results will shrink.
 - we need an ng click that will fill in our search bar with the abbreviation for the state.
 
 ```
@@ -73,10 +73,10 @@ app.service('stateService', function($http) {
 </div>
 ```
 - hide it if there is no model or we aren't selecting anything.
-- loop through our items displaying the name.
+- loop through our states displaying the name.
 
 #### Controller:
-- within our controller we make a get request to our states.json file, and then set our scope.items to that return.
+- within our controller we make a get request to our states.json file, and then set our scope.states to that return.
 - use our factory we built to retrieve the states from our json file.
 - set our $scope.states to the return of that request.
 
@@ -101,7 +101,7 @@ app.directive('typeahead', function($timeout) {
   return {
     restrict: 'AEC',
     scope: {
-		items: '=',
+		states: '=',
 		prompt:'@',
 		name: '@',
 		abbreviation:'@',
